@@ -1,0 +1,46 @@
+class Solution {
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        
+        if(n == 1)
+            return 1;
+        
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        
+        // Using TreeMap is the key here
+        Map<Integer, ArrayList<Integer>> map = new TreeMap();
+        
+        for(int i = 0; i < n; i ++){
+            ArrayList<Integer> al = map.getOrDefault(ratings[i], new ArrayList<Integer>());
+            al.add(i);
+            
+            map.put(ratings[i], al);
+        }
+        
+        for(Map.Entry<Integer, ArrayList<Integer>> entry : map.entrySet()){
+            int rating = entry.getKey();
+            
+            ArrayList<Integer> indices = entry.getValue();
+            
+            for(int index : indices){
+                int firstNeighbour = index - 1, secondNeighbour = index + 1;
+                
+                if(firstNeighbour >= 0 && ratings[firstNeighbour] < rating){
+                    dp[index] = Math.max(dp[index], dp[firstNeighbour] + 1);
+                }
+                
+                if(secondNeighbour < n && ratings[secondNeighbour] < rating){
+                    dp[index] = Math.max(dp[index], dp[secondNeighbour] + 1);
+                }
+            }
+        }
+        
+        int result = 0;
+        for(int i = 0; i < n; i++){
+            result += dp[i];
+        }
+        
+        return result;
+    }
+}
