@@ -1,0 +1,34 @@
+class Solution {
+    int result;
+    public int longestConsecutive(int[] nums) {
+        result = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        Set<Integer> set = new HashSet<Integer>();
+        
+        for(Integer i : nums){
+            set.add(i);
+        }
+        
+        for(int i = 0; i < nums.length; i++){
+            if(map.get(nums[i]) == null){
+                map.put(nums[i], getCount(nums[i], map, set));
+            }
+        }
+        
+        return result;
+    }
+    
+    private int getCount(int num, Map<Integer, Integer> map, Set<Integer> nums){
+        if(map.get(num) != null)
+            return map.get(num);
+        
+        if(nums.contains(num)){
+            int count = 1 + getCount(num + 1, map, nums);
+            map.put(num, count);
+            result =Math.max(result, count);
+            return count;
+        }
+        
+        return 0;
+    }
+}
