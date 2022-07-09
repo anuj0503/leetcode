@@ -1,0 +1,35 @@
+class Solution {
+    public int maxResult(int[] nums, int k) {
+        int n = nums.length;
+        PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(new Comparator<Pair<Integer, Integer>>(){
+            @Override
+            public int compare(Pair<Integer, Integer> p1, Pair<Integer, Integer> p2){
+                if(p1.getKey() == p2.getKey())
+                    return p2.getValue() - p2.getValue();
+                
+                return p2.getKey() - p1.getKey();
+            }
+        });
+        
+        for(int i = 0; i < n; i++){
+            while(!pq.isEmpty() && i - pq.peek().getValue() > k){
+                pq.poll();
+            }
+            
+            Pair<Integer, Integer> p = null;
+            
+            if(pq.isEmpty()){
+                p = new Pair<Integer, Integer>(nums[i], i);
+            } else {
+                p = new Pair<Integer, Integer>(nums[i] + pq.peek().getKey(), i);
+            }
+            
+            pq.offer(p);
+            
+            if(i == n - 1)
+                return p.getKey();
+        }
+        
+        return 0;
+    }
+}
